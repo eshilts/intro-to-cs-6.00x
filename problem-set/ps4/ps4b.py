@@ -2,6 +2,7 @@ from ps4a import *
 import time
 
 
+
 #
 #
 # Problem #6: Computer chooses a word
@@ -23,25 +24,48 @@ def compChooseWord(hand, wordList, n):
 
     returns: string or None
     """
-    # BEGIN PSEUDOCODE <-- Remove this comment when you code this function; do your coding within the pseudocode (leaving those comments in-place!)
+    def isInHand(word, hand):
+        wordFrequency = getFrequencyDict(word)                                      
+        wordInHand = True                                                           
+        for key in wordFrequency.keys():                                            
+            if wordFrequency.get(key, 0) > hand.get(key, 0):                        
+                wordInHand = False                                                  
+                break                                                               
+
+        return wordInHand
+
     # Create a new variable to store the maximum score seen so far (initially 0)
+    maxScore = 0
 
     # Create a new variable to store the best word seen so far (initially None)  
+    bestWord = None
 
     # For each word in the wordList
+    for word in wordList:
 
         # If you can construct the word from your hand
         # (hint: you can use isValidWord, or - since you don't really need to test if the word is in the wordList - you can make a similar function that omits that test)
+        if isInHand(word, hand):
 
             # Find out how much making that word is worth
+            potentialPoints = getWordScore(word, n)
 
             # If the score for that word is higher than your best score
+            if potentialPoints > maxScore:
 
                 # Update your best score, and best word accordingly
+                bestWord = word
+                maxScore = potentialPoints
 
 
     # return the best word you found.
+    return bestWord
 
+wordList = loadWords()
+print compChooseWord({'a': 1, 'p': 2, 's': 1, 'e': 1, 'l': 1}, wordList, 6)
+print compChooseWord({'a': 2, 'c': 1, 'b': 1, 't': 1}, wordList, 5)
+print compChooseWord({'a': 2, 'e': 2, 'i': 2, 'm': 2, 'n': 2, 't': 2}, wordList, 12)
+print compChooseWord({'x': 2, 'z': 2, 'q': 2, 'n': 2, 't': 2}, wordList, 12)
 
 #
 # Problem #7: Computer plays a hand
