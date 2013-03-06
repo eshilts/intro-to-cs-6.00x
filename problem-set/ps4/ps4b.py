@@ -61,12 +61,6 @@ def compChooseWord(hand, wordList, n):
     # return the best word you found.
     return bestWord
 
-wordList = loadWords()
-print compChooseWord({'a': 1, 'p': 2, 's': 1, 'e': 1, 'l': 1}, wordList, 6)
-print compChooseWord({'a': 2, 'c': 1, 'b': 1, 't': 1}, wordList, 5)
-print compChooseWord({'a': 2, 'e': 2, 'i': 2, 'm': 2, 'n': 2, 't': 2}, wordList, 12)
-print compChooseWord({'x': 2, 'z': 2, 'q': 2, 'n': 2, 't': 2}, wordList, 12)
-
 #
 # Problem #7: Computer plays a hand
 #
@@ -89,8 +83,30 @@ def compPlayHand(hand, wordList, n):
     wordList: list (string)
     n: integer (HAND_SIZE; i.e., hand size required for additional points)
     """
-    # TO DO ... <-- Remove this comment when you code this function
+    score = 0
+
+    while calculateHandlen(hand) > 0:
+        print "Current Hand: ",
+        displayHand(hand)
+
+        word = compChooseWord(hand, wordList, n)
+
+        if word == None:
+            break
+        else:
+            points = getWordScore(word, n)
+            score += points
+
+            print '"{0}" earned {1} points. Total: {2} points'.format(
+                    word, points, score)
+            print
+
+            hand = updateHand(hand, word)
+
+    print "Total score: {0} points.".format(score)
     
+
+
 #
 # Problem #8: Playing a game
 #
@@ -119,8 +135,39 @@ def playGame(wordList):
 
     wordList: list (string)
     """
-    # TO DO... <-- Remove this comment when you code this function
-    print "playGame not yet implemented." # <-- Remove this when you code this function
+    def playHandAll(hand, wordList, HAND_SIZE):
+        whoPlays = raw_input("Enter u to have yourself play, c to have the computer play: ").lower()
+
+        if whoPlays == 'u':
+            playHand(hand, wordList, HAND_SIZE)
+        elif whoPlays == 'c':
+            compPlayHand(hand, wordList, HAND_SIZE)
+        else:
+            print "Invalid command."
+            print
+            playHandAll(hand, wordList, HAND_SIZE)
+
+    choice = ''
+    hand = {}
+
+    while choice != 'e':
+        choice = raw_input("Enter n to deal a new hand, r to replay the last hand, or e to end game: ").lower()
+
+        if choice == 'n':
+            hand = dealHand(HAND_SIZE)
+            playHandAll(hand, wordList, HAND_SIZE)
+        elif choice == 'r':
+            if hand.keys() == []:
+                print "You have not played a hand yet. Please play a new hand first!"
+                print
+                next
+            else:
+                playHandAll(hand, wordList, HAND_SIZE)
+        elif choice == 'e':
+            break
+        else:
+            print "Invalid command."
+            next
 
         
 #
