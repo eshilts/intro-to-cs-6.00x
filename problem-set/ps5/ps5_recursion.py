@@ -15,7 +15,12 @@ def reverseString(aStr):
     aStr: a string
     returns: a reversed string
     """
-    ### TODO.
+    if len(aStr) in [0, 1]:
+        return aStr
+    else:
+        return aStr[-1] + reverseString(aStr[:-1])
+
+print reverseString("string")
 
 #
 # Problem 4: X-ian
@@ -36,7 +41,21 @@ def x_ian(x, word):
     word: a string
     returns: True if word is x_ian, False otherwise
     """
-    ###TODO.
+    if len(x) == 0:
+        return True
+
+    if len(word) == 0:
+        return False
+
+    if x[0] == word[0]:
+        return True and x_ian(x[1:], word[1:])
+    else:
+        return x_ian(x, word[1:])
+
+print x_ian('eric', 'algebraic')
+print x_ian('john', 'mahjong')
+print x_ian('alvin', 'palavering')
+print x_ian('sarina', 'czarina')
 
 #
 # Problem 5: Typewriter
@@ -52,4 +71,13 @@ def insertNewlines(text, lineLength):
         the next word.
     returns: a string, with newline characters inserted appropriately. 
     """
-    ### TODO.
+    endLine = text.find(' ', lineLength - 1)
+    
+    if endLine == -1:
+        return text
+    else:
+        return text[:endLine] + "\n" + insertNewlines(text[endLine + 1:],
+            lineLength)
+
+print insertNewlines('While I expect new intellectual adventures ahead, nothing will compare to the exhilaration of the world-changing accomplishments that we produced together.', 15)
+print insertNewlines('Random text to wrap again.', 5)
