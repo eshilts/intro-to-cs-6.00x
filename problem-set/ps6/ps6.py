@@ -87,10 +87,40 @@ class Trigger(object):
 # Problems 2-5
 
 # TODO: WordTrigger
+class WordTrigger(Trigger):
+    def __init__(self, word):
+        self.word = word
 
-# TODO: TitleTrigger
-# TODO: SubjectTrigger
-# TODO: SummaryTrigger
+    def isWordIn(self, text):
+        compareText = ''
+        for letter in text:
+            if letter in string.punctuation:
+                compareText += ' '
+            else:
+                compareText += letter
+
+        textWords = compareText.lower().split()
+        searchWord = self.word.lower()
+
+        for textWord in textWords:
+            if searchWord == textWord:
+                return True
+
+        return False
+
+
+class TitleTrigger(WordTrigger):
+    def evaluate(self, story):
+        return self.isWordIn(story.getTitle())
+
+class SubjectTrigger(WordTrigger):
+    def evaluate(self, story):
+        return self.isWordIn(story.getSubject())
+
+class SummaryTrigger(WordTrigger):
+    def evaluate(self, story):
+        return self.isWordIn(story.getSummary())
+
 
 
 # Composite Triggers
