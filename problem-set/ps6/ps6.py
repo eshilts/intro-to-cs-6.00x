@@ -86,7 +86,6 @@ class Trigger(object):
 # Whole Word Triggers
 # Problems 2-5
 
-# TODO: WordTrigger
 class WordTrigger(Trigger):
     def __init__(self, word):
         self.word = word
@@ -122,19 +121,48 @@ class SummaryTrigger(WordTrigger):
         return self.isWordIn(story.getSummary())
 
 
-
 # Composite Triggers
 # Problems 6-8
 
-# TODO: NotTrigger
-# TODO: AndTrigger
-# TODO: OrTrigger
+class NotTrigger(Trigger):
+    def __init__(self, other):
+        self.other = other
+
+    def evaluate(self, story):
+        return not self.other.evaluate(story)
+
+class AndTrigger(Trigger):
+    def __init__(self, other, another):
+        self.other = other
+        self.another = another
+
+    def evaluate(self, story):
+        return self.other.evaluate(story) and self.another.evaluate(story)
+
+class OrTrigger(Trigger):
+    def __init__(self, other, another):
+        self.other = other
+        self.another = another
+
+    def evaluate(self, story):
+        return self.other.evaluate(story) or self.another.evaluate(story)
 
 
 # Phrase Trigger
 # Question 9
 
-# TODO: PhraseTrigger
+class PhraseTrigger(Trigger):
+    def __init__(self, phrase):
+        self.phrase = phrase
+
+    def evaluate(self, story):
+        for content in [story.getTitle(), story.getSubject(),
+                story.getSummary()]:
+            if self.phrase in content:
+                return True
+
+        return False
+        
 
 
 #======================
