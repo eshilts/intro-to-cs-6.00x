@@ -176,9 +176,15 @@ def filterStories(stories, triggerlist):
 
     Returns: a list of only the stories for which a trigger in triggerlist fires.
     """
-    # TODO: Problem 10
-    # This is a placeholder (we're just returning all the stories, with no filtering) 
-    return stories
+    triggeredStories = []
+
+    for story in stories:
+        for trigger in triggerlist:
+            if trigger.evaluate(story):
+                triggeredStories.append(story)
+                break
+
+    return triggeredStories
 
 #======================
 # Part 4
@@ -200,7 +206,21 @@ def makeTrigger(triggerMap, triggerType, params, name):
 
     Returns a new instance of a trigger (ex: TitleTrigger, AndTrigger).
     """
-    # TODO: Problem 11
+    if triggerType in['PHRASE', 'SUBJECT', 'TITLE', 'SUMMARY']:
+        triggerParams = "'" + " ".join(params) + "'"
+        triggerCall = triggerType.capitalize() + "Trigger({0})".format(triggerParams)
+        newTrigger = eval(triggerCall)
+    else:
+        if triggerType == 'AND':
+            newTrigger = AndTrigger(triggerMap[params[0]], triggerMap[params[1]])
+        elif triggerType == 'OR':
+            newTrigger = OrTrigger(triggerMap[params[0]], triggerMap[params[1]])
+        else: 
+            newTrigger = NotTrigger(triggerMap[params[0]])
+
+    triggerMap[name] = newTrigger
+
+    return newTrigger
 
 
 def readTriggerConfig(filename):
@@ -252,15 +272,16 @@ def main_thread(master):
     # this with something more configurable in Problem 11
     try:
         # These will probably generate a few hits...
-        t1 = TitleTrigger("Obama")
-        t2 = SubjectTrigger("Romney")
-        t3 = PhraseTrigger("Election")
-        t4 = OrTrigger(t2, t3)
-        triggerlist = [t1, t4]
+        #t1 = TitleTrigger("Obama")
+        #t2 = SubjectTrigger("Romney")
+        #t3 = PhraseTrigger("Election")
+        #t4 = OrTrigger(t2, t3)
+        #triggerlist = [t1, t4]
         
         # TODO: Problem 11
         # After implementing makeTrigger, uncomment the line below:
-        # triggerlist = readTriggerConfig("triggers.txt")
+        triggerlist = readTriggerConfig("triggers.txt")
+        print "Finished readTriggerConfig"
 
         # **** from here down is about drawing ****
         frame = Frame(master)
