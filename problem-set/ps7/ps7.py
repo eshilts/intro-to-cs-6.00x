@@ -270,7 +270,29 @@ def runSimulation(num_robots, speed, width, height, min_coverage, num_trials,
     robot_type: class of robot to be instantiated (e.g. StandardRobot or
                 RandomWalkRobot)
     """
-    raise NotImplementedError
+    timeSteps = []
+
+    for iTrial in range(num_trials):
+        # Animation, to be removed
+        #anim = ps7_visualize.RobotVisualization(num_robots, width, height)
+
+        room = RectangularRoom(width, height)
+        robots = []
+        for iRobot in range(num_robots):
+            robots.append(robot_type(room, speed))
+
+        time = 0
+        while (float(room.getNumCleanedTiles()) / room.getNumTiles()) < min_coverage:
+            #anim.update(room, robots)
+            for robot in robots:
+                robot.updatePositionAndClean()
+            time += 1
+
+        timeSteps.append(time)
+        #anim.done()
+
+    return float(sum(timeSteps)) / num_trials
+
 
 
 # === Problem 4
@@ -286,7 +308,14 @@ class RandomWalkRobot(Robot):
         Move the robot to a new position and mark the tile it is on as having
         been cleaned.
         """
-        raise NotImplementedError
+        newPosition = self.position.getNewPosition(self.direction, self.speed)
+        newPositionInRoom = self.room.isPositionInRoom(newPosition)
+
+        if newPositionInRoom:
+            self.position = newPosition
+            self.room.cleanTileAtPosition(self.position)
+
+        self.setRobotDirection(self.getRandomDirection())
 
 
 def showPlot1(title, x_label, y_label):
