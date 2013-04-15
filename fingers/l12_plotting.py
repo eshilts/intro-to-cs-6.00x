@@ -28,4 +28,17 @@ def producePlot(lowTemps, highTemps):
     pylab.show()
 
 high_low = loadJulyTemps()
-producePlot(high_low[1], high_low[0])
+#producePlot(high_low[1], high_low[0])
+
+def plotHighAndLowTemps(lowTemps, highTemps):
+    pylab.figure(2)
+    pylab.plot(range(1, 32), lowTemps, 'b--')
+    pylab.plot(range(1, 32), highTemps, 'r-')
+    pylab.title('Day by Day High and Low Temperatures in Boston in July 2012')
+    pylab.xlabel('Days')
+    pylab.ylabel('Temperature')
+    pylab.annotate('High', (31.5, highTemps[-1]), color='r')
+    pylab.annotate('Low', (31.5, lowTemps[-1]), color='b')
+    pylab.show()
+
+plotHighAndLowTemps(high_low[1], high_low[0])
